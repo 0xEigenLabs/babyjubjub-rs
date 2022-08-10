@@ -48,7 +48,7 @@ lazy_static! {
         b"21888242871839275222246405745257275088548364400416034343698204186575808495617",10
     )
         .unwrap();
-    static ref B8: Point = Point {
+    pub static ref B8: Point = Point {
         x: Fr::from_str(
                "5299619240641551281634865583518297030282874472190772894086521144482721001553",
            )
@@ -64,7 +64,7 @@ lazy_static! {
         .unwrap();
 
     // SUBORDER = ORDER >> 3
-    static ref SUBORDER: BigInt = &BigInt::parse_bytes(
+    pub static ref SUBORDER: BigInt = &BigInt::parse_bytes(
         b"21888242871839275222246405745257275088614511777268538073601725287587578984328",
         10,
     )
@@ -151,7 +151,20 @@ pub struct Point {
     pub y: Fr,
 }
 
+impl PartialEq for Point {
+    fn eq(&self, other: &Self) -> bool {
+        self.equals(other)
+    }
+}
+
 impl Point {
+    pub fn random<R: rand6::RngCore + rand6::CryptoRng>(rng: &mut R) -> Self {
+        let mut buf = [0u8; 32];
+        rng.fill_bytes(&mut buf);
+        let sk = PrivateKey::import(buf[..32].to_vec()).unwrap();
+        sk.public()
+    }
+
     pub fn projective(&self) -> PointProjective {
         PointProjective {
             x: self.x,
@@ -191,7 +204,7 @@ impl Point {
         r
     }
 
-    pub fn equals(&self, p: Point) -> bool {
+    pub fn equals(&self, p: &Point) -> bool {
         if self.x == p.x && self.y == p.y {
             return true;
         }
@@ -393,7 +406,7 @@ pub fn verify_schnorr(pk: Point, m: BigInt, r: Point, s: BigInt) -> Result<bool,
     let pk_h = pk.mul_scalar(&h);
     let right = r.projective().add(&pk_h.projective());
 
-    Ok(sg.equals(right.affine()))
+    Ok(sg.equals(&right.affine()))
 }
 
 pub fn new_key() -> PrivateKey {
@@ -420,7 +433,7 @@ pub fn verify(pk: Point, sig: Signature, msg: BigInt) -> bool {
         .r_b8
         .projective()
         .add(&pk.mul_scalar(&(8.to_bigint().unwrap() * hm_b)).projective());
-    l.equals(r.affine())
+    l.equals(&r.affine())
 }
 
 #[cfg(test)]

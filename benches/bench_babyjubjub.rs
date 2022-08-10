@@ -44,8 +44,8 @@ fn criterion_benchmark(c: &mut Criterion) {
     });
 
     let sk = babyjubjub_rs::new_key();
-    let pk = sk.public().unwrap();
-    let msg = 5.to_bigint().unwrap();
+    let pk = sk.public();
+    let msg = 5u32.to_bigint().unwrap();
     c.bench_function("sign", |b| b.iter(|| sk.sign(msg.clone())));
     let sig = sk.sign(msg.clone()).unwrap();
     c.bench_function("verify", |b| {
