@@ -157,6 +157,8 @@ impl PartialEq for Point {
     }
 }
 
+impl Eq for Point {}
+
 impl Point {
     pub fn random<R: rand6::RngCore + rand6::CryptoRng>(rng: &mut R) -> Self {
         let mut buf = [0u8; 32];
