@@ -10,7 +10,8 @@ readme = "README.md"
 
 [dependencies]
 ff = {package="ff_ce" , version="0.11", features = ["derive"]}
-rand = "0.4"
+rand_core = {version="0.6", default-features=false, features = ["getrandom"]}
+#rand = "0.4"
 rand6 = {package="rand", version="0.6.5"}
 num = "0.2.0"
 num-bigint = {version = "0.2.2", features = ["rand"]}

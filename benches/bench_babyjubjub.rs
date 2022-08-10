@@ -1,6 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 
-extern crate rand;
 #[macro_use]
 extern crate ff;
 use ff::*;

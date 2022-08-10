@@ -2,7 +2,6 @@
 // For LICENSE check https://github.com/arnaucube/babyjubjub-rs
 
 extern crate ff;
-extern crate rand;
 use ff::*;
 
 use poseidon_rs::Poseidon;
@@ -160,7 +159,7 @@ impl PartialEq for Point {
 impl Eq for Point {}
 
 impl Point {
-    pub fn random<R: rand6::RngCore + rand6::CryptoRng>(rng: &mut R) -> Self {
+    pub fn random<R: rand_core::RngCore + rand_core::CryptoRng>(rng: &mut R) -> Self {
         let mut buf = [0u8; 32];
         rng.fill_bytes(&mut buf);
         let sk = PrivateKey::import(buf[..32].to_vec()).unwrap();
